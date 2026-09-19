@@ -1,6 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { createMessage } from './message.js';
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -15,21 +16,13 @@ app.get('/api/health', (_request, response) => {
 });
 
 app.post('/api/messages', (request, response) => {
-  const { contactId, text } = request.body ?? {};
-  const trimmedText = typeof text === 'string' ? text.trim() : '';
-
-  if (typeof contactId !== 'string' || !contactId.trim() || !trimmedText) {
-    return response.status(400).json({ error: 'A contact and message are required.' });
+  const result = createMessage(request.body);
+  if (result.error) {
+    return response.status(400).json({ error: result.error });
   }
 
-  const message = {
-    id: crypto.randomUUID(),
-    contactId: contactId.trim(),
-    text: trimmedText,
-    createdAt: new Date().toISOString(),
-  };
-  messages.push(message);
-  return response.status(201).json(message);
+  messages.push(result.message);
+  return response.status(201).json(result.message);
 });
 
 app.use(express.static(join(__dirname, '../dist')));

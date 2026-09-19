@@ -22,7 +22,7 @@ npm start
 ## API prototype
 
 - `GET /api/health` — trạng thái dịch vụ.
-- `POST /api/messages` — gửi `{ "contactId": "lina", "text": "Xin chào" }`.
+- `POST /api/messages` — gửi `{ "contactId": "lina", "text": "Xin chào" }`; API từ chối nội dung rỗng hoặc dài quá 4.000 ký tự.
 
 ## Lưu ý triển khai bảo mật
 
