@@ -1,12 +1,15 @@
 # Qalo Chat
 
-Prototype giao diện cho một dịch vụ chat web riêng tư, tối giản và responsive. UI được xây dựng bằng React/Vite; Express cung cấp API prototype để gửi tin nhắn và kiểm tra trạng thái dịch vụ.
+Prototype giao diện cho một dịch vụ chat web riêng tư, tối giản và responsive. UI được xây dựng bằng React/Vite; Express cung cấp API prototype để gửi tin nhắn và kiểm tra trạng thái dịch vụ. Vite proxy `/api` đến server cục bộ khi phát triển.
 
 ## Chạy cục bộ
 
 ```bash
 npm install
 npm run dev
+
+# terminal thứ hai — API ở cổng 3000
+npm run dev:api
 ```
 
 Để chạy server production sau khi build:

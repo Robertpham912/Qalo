@@ -1,18 +1,24 @@
 {
   "name": "qalo-chat",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
+    "dev:api": "node --watch server/index.js",
     "build": "vite build",
     "start": "node server/index.js",
     "preview": "vite preview"
   },
   "dependencies": {
-    "express": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "vite": "latest"
+    "express": "5.1.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "vite": "7.1.4"
   }
 }
