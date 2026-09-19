@@ -1,6 +1,6 @@
 export const MAX_MESSAGE_LENGTH = 4_000;
 
-export function createMessage(payload, createId = crypto.randomUUID) {
+export function createMessage(payload, createId = () => crypto.randomUUID()) {
   const { contactId, text } = payload ?? {};
   const normalizedContactId = typeof contactId === 'string' ? contactId.trim() : '';
   const normalizedText = typeof text === 'string' ? text.trim() : '';
