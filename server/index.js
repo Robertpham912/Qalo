@@ -1,9 +1,38 @@
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-const app = express(); const __dirname = dirname(fileURLToPath(import.meta.url)); const messages = [];
+import { createMessage } from './message.js';
+
+const app = express();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const messages = [];
+const port = Number(process.env.PORT) || 3000;
+
+app.disable('x-powered-by');
 app.use(express.json({ limit: '16kb' }));
-app.post('/api/messages', (req,res) => { const { contactId, text } = req.body || {}; if(typeof contactId !== 'string' || typeof text !== 'string' || !text.trim()) return res.status(400).json({error:'A contact and message are required.'}); const message={id:crypto.randomUUID(),contactId,text:text.trim(),createdAt:new Date().toISOString()}; messages.push(message); res.status(201).json(message); });
-app.get('/api/health',(_,res)=>res.json({status:'ok',messageCount:messages.length}));
-app.use(express.static(join(__dirname,'../dist'))); app.get(/.*/,(req,res)=>res.sendFile(join(__dirname,'../dist/index.html')));
-app.listen(process.env.PORT || 3000,()=>console.log('Qalo chat server ready'));
+
+app.get('/api/health', (_request, response) => {
+  response.json({ status: 'ok', messageCount: messages.length });
+});
+
+app.post('/api/messages', (request, response) => {
+  const result = createMessage(request.body);
+  if (result.error) {
+    return response.status(400).json({ error: result.error });
+  }
+
+  messages.push(result.message);
+  return response.status(201).json(result.message);
+});
+
+app.use(express.static(join(__dirname, '../dist')));
+app.get(/.*/, (_request, response) => response.sendFile(join(__dirname, '../dist/index.html')));
+
+app.use((error, _request, response, _next) => {
+  if (error instanceof SyntaxError && 'body' in error) {
+    return response.status(400).json({ error: 'Invalid JSON body.' });
+  }
+  return response.status(500).json({ error: 'Unexpected server error.' });
+});
+
+app.listen(port, () => console.log(`Qalo chat server ready on port ${port}`));
